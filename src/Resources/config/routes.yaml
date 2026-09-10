@@ -1,0 +1,3 @@
+wexample_symfony_live_controllers:
+  resource: "../../Controller/"
+  type: attribute

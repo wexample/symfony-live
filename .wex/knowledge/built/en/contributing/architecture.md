@@ -18,10 +18,56 @@ keys.
 
 - `Helper/LiveTopicHelper` — the topic grammar, static, no state
 - `Enum/LiveTopicAction` — the action vocabulary a topic segment may take
+- `Attribute/LiveEntity` — marks an entity open to subscription
 - `Class/LiveSubscriberInfo` — the wire shape handed to a subscriber
+- `Class/LiveEntityDefinition` — a marked entity, its kebab name and its granted actions
 - `Service/LivePublisherService` — wraps `HubInterface`, owns the `{event, data}` envelope
 - `Service/LiveSubscriberTokenService` — mints subscriber-only tokens
+- `Service/LiveEntityRegistryService` — finds marked entities in the Doctrine mapping
+- `Interface/LiveEntityNormalizerInterface` — the normalizer an entity is published with
+- `EventListener/LiveEntityPublishListener` — publishes create, update and delete
+- `Controller/LiveSubscribeController` — the generic `subscribe-info` endpoint
 - `DependencyInjection/` — parameters, plus the prepended Mercure hub
+
+## Publishing waits for postFlush
+
+`postPersist`, `postUpdate` and `postRemove` only note what happened; the listener publishes in
+`postFlush`. Pushing from inside the transaction would announce a change a rollback then
+undoes, and there is no retraction a subscriber could hear.
+
+Finding the normalizer is the one thing that could not be derived. An entity has several —
+legacy, summary, export — none of which is more canonical than the others from outside the
+app, and `symfony-helpers` normalizers are injected by class rather than resolved through the
+serializer, so asking the serializer would have picked whichever matched first. Marking one
+with `LiveEntityNormalizerInterface` is the app naming it, and costs a single `implements`
+because `getEntityClassName()` is already there. The interface is autoconfigured onto a tag in
+the extension and the listener takes them all through `#[AutowireIterator]` — no compiler pass,
+and no dependency on `symfony-api`.
+
+## The entity name is derived, never declared
+
+`LiveEntityRegistryService` builds its name-to-class map by walking
+`getMetadataFactory()->getAllMetadata()` and keeping the classes carrying `#[LiveEntity]`. There
+is no config file to keep in step, and no name to invent: the key is
+`ClassHelper::getKebabName()`, which is `getSnakeShortClassName()` with dashes instead of
+underscores — the same string the topic's second segment already uses, and the same one the
+browser produces with `stringToKebab(getEntityName())`.
+
+The endpoint takes an entity name and an id, never a topic. A caller that could hand over a
+topic list would be a caller deciding what it may listen to; here the topics are built by the
+same `LiveTopicHelper::entity()` call the publisher makes, and authorisation is a voter on the
+loaded entity. With no voter supporting it, Symfony denies — which is the direction a mistake
+should fall in.
+
+## One identifier
+
+`LiveTopicHelper::entity()` reads the id off the entity and takes no identifier argument.
+That is deliberate: an app given the choice takes it per call site, and the browser has no
+choice at all — it subscribes on the `id` the API served it. The two only meet if the topic
+carries `(string) $entity->getId()`, which is what `AbstractEntityNormalizer` serializes.
+
+Apps carrying a second identifier from before uuids — a `secureId`, a slug — cannot publish
+on it: the migration is theirs to finish, not the helper's to accommodate.
 
 ## Two tokens, not one
 

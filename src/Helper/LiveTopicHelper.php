@@ -3,6 +3,7 @@
 namespace Wexample\SymfonyLive\Helper;
 
 use Wexample\Helpers\Helper\ClassHelper;
+use Wexample\SymfonyHelpers\Entity\Interfaces\AbstractEntityInterface;
 use Wexample\SymfonyLive\Enum\LiveTopicAction;
 
 class LiveTopicHelper
@@ -11,23 +12,24 @@ class LiveTopicHelper
     final public const PREFIX_ENTITY = 'entity';
 
     /**
-     * Builds `entity/<kebab-entity-name>/<action>/<identifier>`, the topic grammar the
-     * browser rebuilds segment by segment in symfony-loader LiveUpdatesService.topic():
-     * a change here is a change on both sides.
+     * Builds `entity/<kebab-entity-name>/<action>/<id>`, the topic grammar the browser
+     * rebuilds segment by segment in symfony-loader LiveUpdatesService.topic(): a change
+     * here is a change on both sides.
      *
-     * @param string|int $identifier what the subscriber knows the entity by, which is a
-     *                               secure id as often as it is a primary key
+     * The last segment is the entity id and nothing else, cast the way the normalizers
+     * cast it. A subscriber only ever holds what the API served it, whose `id` field comes
+     * from that same expression — any second identifier would put the two halves on
+     * topics that never meet.
      */
     public static function entity(
-        object|string $entity,
-        LiveTopicAction|string $action,
-        string|int $identifier
+        AbstractEntityInterface $entity,
+        LiveTopicAction|string $action
     ): string {
         return static::join(
             static::PREFIX_ENTITY,
             ClassHelper::getKebabName($entity),
             $action instanceof LiveTopicAction ? $action->value : $action,
-            $identifier
+            (string) $entity->getId()
         );
     }
 

@@ -7,6 +7,13 @@ services:
     Wexample\SymfonyLive\Service\:
         resource: '../../Service/*'
 
+    Wexample\SymfonyLive\Controller\:
+        resource: '../../Controller/*'
+        tags: ['controller.service_arguments']
+
+    Wexample\SymfonyLive\EventListener\:
+        resource: '../../EventListener/*'
+
     Wexample\SymfonyLive\Service\LiveSubscriberTokenService:
         arguments:
             $jwtSecret: '%wexample_symfony_live.jwt_secret%'
