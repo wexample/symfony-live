@@ -1,11 +1,26 @@
 {
   "name": "wexample/symfony-live",
-  "version": "1.0.2",
+  "description": "Server side of Wex live updates: Mercure topics, subscriber tokens and publication",
   "type": "library",
   "license": "MIT",
+  "version": "1.0.2",
   "autoload": {
     "psr-4": {
-      "Wexample\\SymfonyAi\\": "src/"
+      "Wexample\\SymfonyLive\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "weeger",
+      "email": "romain.weeger@wexample.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.2",
+    "lcobucci/jwt": "^4.0 || ^5.0",
+    "symfony/mercure": "^0.6",
+    "symfony/mercure-bundle": "^0.3",
+    "wexample/php-helpers": ">=3.0.0",
+    "wexample/symfony-helpers": ">=7.0.0"
   }
 }
