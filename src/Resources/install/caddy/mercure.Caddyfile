@@ -1,0 +1,8 @@
+mercure {
+    publisher_jwt {$MERCURE_JWT_SECRET:!ChangeThisMercureHubJWTSecretKey!}
+    subscriber_jwt {$MERCURE_JWT_SECRET:!ChangeThisMercureHubJWTSecretKey!}
+    cors_origins {$MERCURE_CORS_ORIGINS:*}
+    publish_origins {$MERCURE_PUBLISH_ORIGINS:*}
+    anonymous
+    subscriptions
+}

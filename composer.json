@@ -16,11 +16,22 @@
     }
   ],
   "require": {
-    "php": ">=8.2",
+    "php": ">=8.5",
     "lcobucci/jwt": "^4.0 || ^5.0",
     "symfony/mercure": "^0.6",
     "symfony/mercure-bundle": "^0.3",
     "wexample/php-helpers": ">=3.0.0",
     "wexample/symfony-helpers": ">=7.0.0"
+  },
+  "extra": {
+    "install": {
+      "bundle_env": "all",
+      "files": {
+        "src/Resources/install/config/packages/mercure.yaml": "config/packages/mercure.yaml"
+      },
+      "blocks": {
+        "src/Resources/install/caddy/mercure.Caddyfile": ".wex/caddy/Caddyfile"
+      }
+    }
   }
 }
