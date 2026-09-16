@@ -13,7 +13,7 @@ use Wexample\SymfonyLive\Helper\LiveTopicHelper;
 use Wexample\SymfonyLive\Service\LiveEntityRegistryService;
 use Wexample\SymfonyLive\Service\LiveSubscriberTokenService;
 
-#[Route(path: 'live/', name: 'wexample_symfony_live_')]
+#[Route(path: '_live/', name: 'wexample_symfony_live_')]
 class LiveSubscribeController extends AbstractController
 {
     final public const string ROUTE_SUBSCRIBE_INFO = 'subscribe_info';
