@@ -13,6 +13,7 @@ use Wexample\SymfonyHelpers\Entity\Interfaces\AbstractEntityInterface;
 use Wexample\SymfonyLive\Enum\LiveTopicAction;
 use Wexample\SymfonyLive\Helper\LiveTopicHelper;
 use Wexample\SymfonyLive\Interface\LiveEntityNormalizerInterface;
+use Wexample\SymfonyLive\Interface\LivePublishedWithParentInterface;
 use Wexample\SymfonyLive\Service\LiveEntityRegistryService;
 use Wexample\SymfonyLive\Service\LivePublisherService;
 
@@ -72,12 +73,47 @@ class LiveEntityPublishListener
         $this->pending = [];
 
         foreach ($pending as [$entity, $action]) {
-            $this->publisher->publishEvent(
-                LiveTopicHelper::entity($entity, $action),
-                $action->value,
-                $this->buildData($entity, $action)
-            );
+            $data = $this->buildData($entity, $action);
+
+            foreach ($this->topicsFor($entity, $action) as $topic) {
+                $this->publisher->publishEvent(
+                    $topic,
+                    $action->value,
+                    $data
+                );
+            }
         }
+    }
+
+    /**
+     * Its own topic, and those of whatever holds it.
+     *
+     * A collection watches the thing it is the collection of rather than each of
+     * its rows, because the row it is waiting for is the one that does not exist
+     * yet — see LivePublishedWithParentInterface.
+     *
+     * @return string[]
+     */
+    private function topicsFor(
+        AbstractEntityInterface $entity,
+        LiveTopicAction $action
+    ): array {
+        $topics = [LiveTopicHelper::entity($entity, $action)];
+
+        if (! $entity instanceof LivePublishedWithParentInterface) {
+            return $topics;
+        }
+
+        foreach ($entity->getLiveParents() as $parent) {
+            // A parent nobody may subscribe to would be an address nothing
+            // listens on: publishing there costs a round trip for no reader.
+            if ($parent instanceof AbstractEntityInterface
+                && $this->registry->findByClassName($parent)) {
+                $topics[] = LiveTopicHelper::entity($parent, $action);
+            }
+        }
+
+        return $topics;
     }
 
     private function collect(object $entity, LiveTopicAction $action): void
