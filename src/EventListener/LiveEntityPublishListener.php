@@ -8,7 +8,10 @@ use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PostRemoveEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Events;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
+use Symfony\Component\Mercure\Exception\ExceptionInterface as MercureExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface as HttpClientExceptionInterface;
 use Wexample\SymfonyHelpers\Entity\Interfaces\AbstractEntityInterface;
 use Wexample\SymfonyLive\Enum\LiveTopicAction;
 use Wexample\SymfonyLive\Helper\LiveTopicHelper;
@@ -49,6 +52,7 @@ class LiveEntityPublishListener
         private readonly LivePublisherService $publisher,
         #[AutowireIterator(LiveEntityNormalizerInterface::TAG)]
         private readonly iterable $normalizers,
+        private readonly ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -76,11 +80,24 @@ class LiveEntityPublishListener
             $data = $this->buildData($entity, $action);
 
             foreach ($this->topicsFor($entity, $action) as $topic) {
-                $this->publisher->publishEvent(
-                    $topic,
-                    $action->value,
-                    $data
-                );
+                // The flush already committed; notifying subscribers is a
+                // courtesy on top of it. A hub that is down — the board rebuilding
+                // its projections at boot, before its own web server serves the
+                // one that carries the hub — must not turn a written row into a
+                // failed command. The catch is the hub's transport boundary, and
+                // an event nobody is listening for yet is one nobody misses.
+                try {
+                    $this->publisher->publishEvent(
+                        $topic,
+                        $action->value,
+                        $data
+                    );
+                } catch (HttpClientExceptionInterface | MercureExceptionInterface $exception) {
+                    $this->logger?->warning(
+                        'Live update not published, the hub is unreachable: {message}',
+                        ['message' => $exception->getMessage(), 'topic' => $topic]
+                    );
+                }
             }
         }
     }
