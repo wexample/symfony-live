@@ -3,7 +3,7 @@
   "description": "Server side of Wex live updates: Mercure topics, subscriber tokens and publication",
   "type": "library",
   "license": "MIT",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "autoload": {
     "psr-4": {
       "Wexample\\SymfonyLive\\": "src/"

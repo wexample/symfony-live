@@ -1,6 +1,6 @@
 # symfony-live
 
-Version: 4.0.1
+Version: 4.0.2
 
 `symfony-live` is the server half of Wex live updates: it publishes to a Mercure hub, hands
 subscribers a token scoped to the topics they asked for, and owns the topic grammar and the
