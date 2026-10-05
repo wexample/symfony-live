@@ -19,3 +19,7 @@ services:
             $jwtSecret: '%wexample_symfony_live.jwt_secret%'
             $hubPublicUrl: '%wexample_symfony_live.hub_public_url%'
             $ttlSeconds: '%wexample_symfony_live.subscriber_token_ttl%'
+
+    Wexample\SymfonyLive\Service\LivePresenceService:
+        arguments:
+            $jwtSecret: '%wexample_symfony_live.jwt_secret%'

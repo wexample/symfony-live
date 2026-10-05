@@ -13,7 +13,7 @@ class LivePublisherService
     }
 
     /**
-     * Sends the `{event, data}` envelope every browser subscriber expects, so a topic
+     * Sends the `{topics, event, data}` envelope every browser subscriber expects, so a topic
      * carries a named event rather than a bare payload the receiver has to guess.
      *
      * @param string|string[] $topics
@@ -32,6 +32,10 @@ class LivePublisherService
     }
 
     /**
+     * The payload goes out with the topics it was published on: a browser holds one
+     * stream for all the topics of its page (js-api-entity LiveUpdatesMultiplexer),
+     * and Mercure does not say on which of them an update arrived.
+     *
      * @param string|string[] $topics
      *
      * @return string the update id returned by the hub
@@ -40,10 +44,12 @@ class LivePublisherService
         string|array $topics,
         array $payload
     ): string {
+        $topics = (array) $topics;
+
         return $this->hub->publish(
             new Update(
                 $topics,
-                json_encode($payload, JSON_THROW_ON_ERROR)
+                json_encode(['topics' => array_values($topics)] + $payload, JSON_THROW_ON_ERROR)
             )
         );
     }

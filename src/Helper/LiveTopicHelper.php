@@ -33,6 +33,26 @@ class LiveTopicHelper
         );
     }
 
+    /**
+     * Reads back what entity() built: null for a topic of another grammar.
+     *
+     * @return array{name: string, action: string, id: string}|null
+     */
+    public static function parseEntity(string $topic): ?array
+    {
+        $segments = explode(static::SEPARATOR, $topic);
+
+        if (4 !== count($segments) || static::PREFIX_ENTITY !== $segments[0] || in_array('', $segments, true)) {
+            return null;
+        }
+
+        return [
+            'name' => $segments[1],
+            'action' => $segments[2],
+            'id' => $segments[3],
+        ];
+    }
+
     public static function join(string|int ...$segments): string
     {
         return implode(static::SEPARATOR, $segments);
