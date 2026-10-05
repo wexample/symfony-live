@@ -1,6 +1,6 @@
 # symfony-live
 
-Version: 4.0.7
+Version: 5.0.0
 
 `symfony-live` is the server half of Wex live updates: it publishes to a Mercure hub, hands
 subscribers a token scoped to the topics they asked for, and owns the topic grammar and the
@@ -273,10 +273,12 @@ Visit the [Wexample Suite documentation](https://docs.wexample.com) for the comp
 
 - php: >=8.5
 - lcobucci/jwt: ^4.0 || ^5.0
+- symfony/http-client: ^7.4 || ^8.0
 - symfony/mercure: ^0.6
 - symfony/mercure-bundle: ^0.3
-- wexample/php-helpers: >=6.0.0
-- wexample/symfony-helpers: >=12.0.0
+- symfony/uid: ^7.4 || ^8.0
+- wexample/php-helpers: >=7.0.0
+- wexample/symfony-helpers: >=13.0.0
 
 ## Versioning & Compatibility Policy
 
