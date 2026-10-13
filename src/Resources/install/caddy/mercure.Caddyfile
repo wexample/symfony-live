@@ -1,6 +1,6 @@
 mercure {
     # Newer Mercure keeps these JWT directives for the compatibility mode only.
-    protocol_version_compatibility 8
+    protocol_version_compatibility 7
     publisher_jwt {$MERCURE_JWT_SECRET:!ChangeThisMercureHubJWTSecretKey!}
     subscriber_jwt {$MERCURE_JWT_SECRET:!ChangeThisMercureHubJWTSecretKey!}
     cors_origins {$MERCURE_CORS_ORIGINS:*}
