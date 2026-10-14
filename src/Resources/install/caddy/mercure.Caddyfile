@@ -1,9 +1,9 @@
 mercure {
-    # The *_jwt directives below are only accepted in compatibility mode by newer
-    # Mercure modules: without this line the hub refuses to provision there and
-    # the whole web server fails to start. 7 is the one version that mode takes —
-    # 8 is refused at parse time, and the server never starts either.
-    protocol_version_compatibility 7
+    # The *_jwt directives below are only accepted in compatibility mode since the
+    # Mercure module FrankenPHP 1.13 ships: without this line the hub refuses to
+    # provision and the whole web server fails to start. FrankenPHP is pinned to
+    # 1.13.0 in every image, so this value holds wherever the block is installed.
+    protocol_version_compatibility 8
     publisher_jwt {$MERCURE_JWT_SECRET:!ChangeThisMercureHubJWTSecretKey!}
     subscriber_jwt {$MERCURE_JWT_SECRET:!ChangeThisMercureHubJWTSecretKey!}
     cors_origins {$MERCURE_CORS_ORIGINS:*}
