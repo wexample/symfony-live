@@ -7,6 +7,7 @@ use Wexample\Helpers\Helper\ClassHelper;
 use Wexample\SymfonyLive\Attribute\LiveEntity;
 use Wexample\SymfonyLive\Class\LiveEntityDefinition;
 use Wexample\SymfonyLive\Enum\LiveTopicAction;
+use Wexample\SymfonyHelpers\Attribute\WorkerSafe;
 
 /**
  * Reads which entities carry #[LiveEntity] straight from the Doctrine mapping, so an
@@ -17,6 +18,7 @@ class LiveEntityRegistryService
     /**
      * @var array<string, LiveEntityDefinition>|null
      */
+    #[WorkerSafe('Read from the entities attributes, the same for every request.')]
     private ?array $definitions = null;
 
     public function __construct(
