@@ -4,10 +4,10 @@ namespace Wexample\SymfonyLive\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Wexample\Helpers\Helper\ClassHelper;
+use Wexample\SymfonyHelpers\Attribute\WorkerSafe;
 use Wexample\SymfonyLive\Attribute\LiveEntity;
 use Wexample\SymfonyLive\Class\LiveEntityDefinition;
 use Wexample\SymfonyLive\Enum\LiveTopicAction;
-use Wexample\SymfonyHelpers\Attribute\WorkerSafe;
 
 /**
  * Reads which entities carry #[LiveEntity] straight from the Doctrine mapping, so an

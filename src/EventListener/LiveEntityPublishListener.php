@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Mercure\Exception\ExceptionInterface as MercureExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface as HttpClientExceptionInterface;
+use Symfony\Contracts\Service\ResetInterface;
 use Wexample\SymfonyHelpers\Entity\Interfaces\AbstractEntityInterface;
 use Wexample\SymfonyLive\Enum\LiveTopicAction;
 use Wexample\SymfonyLive\Helper\LiveTopicHelper;
@@ -19,7 +20,6 @@ use Wexample\SymfonyLive\Interface\LiveEntityNormalizerInterface;
 use Wexample\SymfonyLive\Interface\LivePublishedWithParentInterface;
 use Wexample\SymfonyLive\Service\LiveEntityRegistryService;
 use Wexample\SymfonyLive\Service\LivePublisherService;
-use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * Publishes create, update and delete for every entity marked #[LiveEntity], so a service
