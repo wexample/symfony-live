@@ -19,6 +19,7 @@ use Wexample\SymfonyLive\Interface\LiveEntityNormalizerInterface;
 use Wexample\SymfonyLive\Interface\LivePublishedWithParentInterface;
 use Wexample\SymfonyLive\Service\LiveEntityRegistryService;
 use Wexample\SymfonyLive\Service\LivePublisherService;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * Publishes create, update and delete for every entity marked #[LiveEntity], so a service
@@ -32,7 +33,7 @@ use Wexample\SymfonyLive\Service\LivePublisherService;
 #[AsDoctrineListener(event: Events::postUpdate)]
 #[AsDoctrineListener(event: Events::postRemove)]
 #[AsDoctrineListener(event: Events::postFlush)]
-class LiveEntityPublishListener
+class LiveEntityPublishListener implements ResetInterface
 {
     /**
      * @var array<array{0: AbstractEntityInterface, 1: LiveTopicAction}>
@@ -54,6 +55,15 @@ class LiveEntityPublishListener
         private readonly iterable $normalizers,
         private readonly ?LoggerInterface $logger = null,
     ) {
+    }
+
+    /**
+     * Emptied by the flush that publishes them; a request that failed before
+     * it would otherwise hand its changes to the next flush.
+     */
+    public function reset(): void
+    {
+        $this->pending = [];
     }
 
     public function postPersist(PostPersistEventArgs $args): void
