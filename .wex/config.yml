@@ -4,7 +4,7 @@ git:
 global:
   name: symfony-live
   type: php-package
-  version: 5.6.0
+  version: 5.6.1
 wex:
-  migration: 1
+  migration: 2
   version: 6.0.150
