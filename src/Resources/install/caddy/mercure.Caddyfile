@@ -4,6 +4,14 @@ mercure {
     # provision and the whole web server fails to start. FrankenPHP is pinned to
     # 1.13.0 in every image, so this value holds wherever the block is installed.
     protocol_version_compatibility 8
+    # Bounded: the hub keeps only the latest events, what a reconnecting client
+    # catches up with. Left to its default, the bolt file grows without end — a
+    # hub once filled a disk with 412 GB of it.
+    transport bolt {
+        path /data/mercure.db
+        size 1000
+        cleanup_frequency 0.3
+    }
     publisher_jwt {$MERCURE_JWT_SECRET:!ChangeThisMercureHubJWTSecretKey!}
     subscriber_jwt {$MERCURE_JWT_SECRET:!ChangeThisMercureHubJWTSecretKey!}
     cors_origins {$MERCURE_CORS_ORIGINS:*}
