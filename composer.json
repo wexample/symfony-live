@@ -3,7 +3,7 @@
   "description": "Server side of Wex live updates: Mercure topics, subscriber tokens and publication",
   "type": "library",
   "license": "MIT",
-  "version": "5.7.0",
+  "version": "5.7.1",
   "autoload": {
     "psr-4": {
       "Wexample\\SymfonyLive\\": "src/"
@@ -22,8 +22,8 @@
     "symfony/mercure": "^0.6",
     "symfony/mercure-bundle": "^0.3",
     "symfony/uid": "^7.4 || ^8.0",
-    "wexample/php-helpers": ">=7.0.0",
-    "wexample/symfony-helpers": ">=18.0.0"
+    "wexample/php-helpers": ">=7.0.4",
+    "wexample/symfony-helpers": ">=18.0.2"
   },
   "extra": {
     "install": {
