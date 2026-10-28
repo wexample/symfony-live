@@ -35,5 +35,8 @@
         "src/Resources/install/caddy/mercure.Caddyfile": ".wex/caddy/Caddyfile"
       }
     }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^13"
   }
 }
