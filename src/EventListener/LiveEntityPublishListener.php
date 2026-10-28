@@ -173,6 +173,11 @@ class LiveEntityPublishListener implements ResetInterface
         return ['id' => (string) $entity->getId()];
     }
 
+    /**
+     * The normalizer written for the nearest class in the entity's ancestry:
+     * a subclass with one of its own goes to it, one without goes to its
+     * root's.
+     */
     private function findNormalizer(AbstractEntityInterface $entity): ?LiveEntityNormalizerInterface
     {
         if ($this->normalizersByClassName === null) {
@@ -183,12 +188,16 @@ class LiveEntityPublishListener implements ResetInterface
             }
         }
 
+        $found = null;
+        $foundClass = null;
+
         foreach ($this->normalizersByClassName as $className => $normalizer) {
-            if ($entity instanceof $className) {
-                return $normalizer;
+            if ($entity instanceof $className && (null === $foundClass || is_subclass_of($className, $foundClass))) {
+                $found = $normalizer;
+                $foundClass = $className;
             }
         }
 
-        return null;
+        return $found;
     }
 }
