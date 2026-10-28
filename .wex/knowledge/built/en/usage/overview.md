@@ -13,6 +13,11 @@ A **topic** is `entity/<kebab-entity-name>/<action>/<id>`, built by
 `renderNode.liveUpdatesTopic()`, so a change to the grammar is a change on both sides.
 `LiveTopicHelper::join()` prefixes a topic when an API version has to scope it.
 
+The name is the hierarchy's where the entity has one: every kind of session — a
+`ClaudeSession`, a `SyrtisSession` — is published on `entity/session/…`, and the root's
+`#[LiveEntity]` is what opens them all to subscription (symfony-helpers, *Entity
+hierarchies*).
+
 The last segment is `(string) $entity->getId()`, the same expression the normalizers use for
 the `id` they serialize — and the helper takes no identifier argument, so an app cannot pass
 a second one. A subscriber only ever holds what the API served it: give it a topic built on

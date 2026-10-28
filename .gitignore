@@ -37,3 +37,4 @@ coverage*.lcov
 .scannerwork
 /vendor
 /.phpunit.result.cache
+/node_modules
